@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://nv61mo8gp0p3"]
+[gd_scene load_steps=56 format=3 uid="uid://nv61mo8gp0p3"]
 
 [ext_resource type="Script" uid="uid://cus47hnawmu5x" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://b35noij8v2kgb" path="res://assets/mystic_woods_free_2/sprites/characters/player.png" id="2_qhqgy"]
@@ -413,11 +413,20 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
+radius = 3.0
+
 [node name="player" type="CharacterBody2D"]
+y_sort_enabled = true
 script = ExtResource("1_g2els")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, -15)
 sprite_frames = SubResource("SpriteFrames_apa73")
 animation = &"death"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -5.9604645e-08)
+scale = Vector2(0.7897518, 0.69098175)
+shape = SubResource("CircleShape2D_g2els")
