@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://pctwi4j5qye8"]
+[gd_scene load_steps=26 format=3 uid="uid://pctwi4j5qye8"]
 
 [ext_resource type="Script" uid="uid://dtplrm5wrs81d" path="res://scripts/slime.gd" id="1_p2gj0"]
 [ext_resource type="Texture2D" uid="uid://dim27nieu5flr" path="res://assets/mystic_woods_free_2/sprites/characters/slime.png" id="2_n6pvg"]
@@ -34,6 +34,26 @@ region = Rect2(64, 32, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_2xjuo"]
 atlas = ExtResource("2_n6pvg")
 region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p2gj0"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(128, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6pvg"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(96, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2v7ff"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(64, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_35t6e"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(32, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pbccl"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(0, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a02ik"]
 atlas = ExtResource("2_n6pvg")
@@ -96,6 +116,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_p2gj0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6pvg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2v7ff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_35t6e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pbccl")
+}],
+"loop": false,
+"name": &"spawn",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_a02ik")
 }, {
 "duration": 1.0,
@@ -136,10 +176,13 @@ script = ExtResource("1_p2gj0")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_2v7ff")
-animation = &"walk"
+animation = &"spawn"
 autoplay = "idle"
+frame = 4
+frame_progress = 1.0
 
 [node name="detection_area" type="Area2D" parent="."]
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 position = Vector2(0, -7)
@@ -149,5 +192,12 @@ shape = SubResource("CircleShape2D_35t6e")
 position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_pbccl")
 
+[node name="Idle_timeout" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.5
+one_shot = true
+autostart = true
+
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
+[connection signal="timeout" from="Idle_timeout" to="." method="_on_idle_timeout_timeout"]
