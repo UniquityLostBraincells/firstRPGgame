@@ -1,18 +1,19 @@
 extends CharacterBody2D
-var speed = 50
+var speed = 1
 var player_chase = false
 var player = null
 var spawn_ani_finished = false
 
 func _ready() -> void:
 	$AnimatedSprite2D.play("spawn")
+
 func _on_idle_timeout_timeout() -> void:
 	spawn_ani_finished = true
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	if spawn_ani_finished:
 		if player_chase:
-			position += (player.position - position)/speed
+			position += ((player.position - position)/speed) * delta
 			#since speed is being divided, greater speed variable = slower movement
 			#play walk animation when moving
 			$AnimatedSprite2D.play("walk")
