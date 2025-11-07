@@ -3,6 +3,10 @@ var speed = 1
 var player_chase = false
 var player = null
 var spawn_ani_finished = false
+var health = 100
+var player_in_range = false
+var can_take_damage = true
+
 
 func _ready() -> void:
 	$AnimatedSprite2D.play("spawn")
@@ -11,6 +15,7 @@ func _on_idle_timeout_timeout() -> void:
 	spawn_ani_finished = true
 
 func _physics_process(delta):
+	deal_damage()
 	if spawn_ani_finished:
 		if player_chase:
 			position += ((player.position - position)/speed) * delta
@@ -28,12 +33,39 @@ func _physics_process(delta):
 			$AnimatedSprite2D.play("idle")
 
 
-func _on_detection_area_body_entered(body: CharacterBody2D) -> void:
+func _on_detection_area_body_entered(body):
 	player = body
 	player_chase = true
 
 
-
-func _on_detection_area_body_exited(_body: CharacterBody2D) -> void:
+func _on_detection_area_body_exited(_body):
 	player = null
 	player_chase = false
+	
+#so the player can detect it is an enemy:
+func enemy():
+	pass
+
+
+func _on_hitbox_body_entered(body):
+	if body.has_method("player"):
+		player_in_range = false
+
+func _on_hitbox_body_exited(body):
+	if body.has_method("player"):
+		player_in_range = false
+
+
+func deal_damage():
+	if player_in_range == true and Global.player_current_attack == true:
+		if can_take_damage == true:
+			$time.start()
+			can_take_damage = false
+			health = health - 20
+			print(health)
+			if health <= 20:
+				self.queue_free()
+
+
+func _on_hit_cooldown_timeout() -> void:
+	can_take_damage = true

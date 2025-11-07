@@ -384,7 +384,7 @@ y_sort_enabled = true
 [node name="player" parent="." instance=ExtResource("4_i7141")]
 z_as_relative = false
 y_sort_enabled = false
-position = Vector2(98, 110)
+position = Vector2(230, 107)
 
 [node name="Camera2D" type="Camera2D" parent="player"]
 zoom = Vector2(4, 4)

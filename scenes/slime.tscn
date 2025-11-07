@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://pctwi4j5qye8"]
+[gd_scene load_steps=28 format=3 uid="uid://pctwi4j5qye8"]
 
 [ext_resource type="Script" uid="uid://dtplrm5wrs81d" path="res://scripts/slime.gd" id="1_p2gj0"]
 [ext_resource type="Texture2D" uid="uid://dim27nieu5flr" path="res://assets/mystic_woods_free_2/sprites/characters/slime.png" id="2_n6pvg"]
@@ -37,21 +37,25 @@ region = Rect2(96, 32, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p2gj0"]
 atlas = ExtResource("2_n6pvg")
-region = Rect2(128, 384, 32, 32)
+region = Rect2(160, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n6pvg"]
 atlas = ExtResource("2_n6pvg")
-region = Rect2(96, 384, 32, 32)
+region = Rect2(128, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2v7ff"]
 atlas = ExtResource("2_n6pvg")
-region = Rect2(64, 384, 32, 32)
+region = Rect2(96, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_35t6e"]
 atlas = ExtResource("2_n6pvg")
-region = Rect2(32, 384, 32, 32)
+region = Rect2(64, 384, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbccl"]
+atlas = ExtResource("2_n6pvg")
+region = Rect2(32, 384, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_24adn"]
 atlas = ExtResource("2_n6pvg")
 region = Rect2(0, 384, 32, 32)
 
@@ -129,10 +133,13 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pbccl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_24adn")
 }],
 "loop": false,
 "name": &"spawn",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -167,6 +174,9 @@ radius = 72.1734
 [sub_resource type="CircleShape2D" id="CircleShape2D_pbccl"]
 radius = 6.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_p2gj0"]
+radius = 13.341664
+
 [node name="slime" type="CharacterBody2D"]
 y_sort_enabled = true
 collision_layer = 2
@@ -177,27 +187,38 @@ script = ExtResource("1_p2gj0")
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_2v7ff")
 animation = &"spawn"
-autoplay = "idle"
-frame = 4
-frame_progress = 1.0
 
 [node name="detection_area" type="Area2D" parent="."]
+collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
-position = Vector2(0, -7)
+position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_35t6e")
+debug_color = Color(0.24097332, 0.63689166, 0, 0.41960785)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, -7)
 shape = SubResource("CircleShape2D_pbccl")
+debug_color = Color(0.94384664, 0.16830477, 0.43174335, 0.41960785)
 
 [node name="Idle_timeout" type="Timer" parent="."]
-unique_name_in_owner = true
 wait_time = 0.5
 one_shot = true
 autostart = true
 
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_p2gj0")
+
+[node name="hit_cooldown" type="Timer" parent="."]
+wait_time = 0.5
+
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
 [connection signal="timeout" from="Idle_timeout" to="." method="_on_idle_timeout_timeout"]
+[connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_exited" from="hitbox" to="." method="_on_hitbox_body_exited"]
+[connection signal="timeout" from="hit_cooldown" to="." method="_on_hit_cooldown_timeout"]
